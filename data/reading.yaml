@@ -1,0 +1,17 @@
+---
+# The same reading as reading.json. YAML allows comments — JSON does not,
+# which is most of the reason configuration files tend to be YAML.
+sensor_id: imu-north-01
+sequence: 10
+timestamp_ms: 1790236800123
+imu:
+  is_valid: true
+  roll: 0.14
+  pitch: 0.013
+  yaw: -5.68
+accelerometer:
+  is_valid: true
+  x: 0
+  "y": -0.01   # quoted: a bare y is the boolean `true` to a YAML 1.1 parser
+  z: -0.23
+temperature: 21.5

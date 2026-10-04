@@ -1,0 +1,5 @@
+sensor_id: acc-mast
+sequence: 4000000000
+timestamp_ms: -1
+imu: { is_valid: false, roll: 0, pitch: 0, yaw: 0 }
+accelerometer: { is_valid: true, x: 9.81, "y": 0.30000000000000004, z: -1e-9 }

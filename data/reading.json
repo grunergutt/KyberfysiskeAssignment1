@@ -1,0 +1,18 @@
+{
+  "sensor_id": "imu-north-01",
+  "sequence": 10,
+  "timestamp_ms": 1790236800123,
+  "imu": {
+    "is_valid": true,
+    "roll": 0.14,
+    "pitch": 0.013,
+    "yaw": -5.68
+  },
+  "accelerometer": {
+    "is_valid": true,
+    "x": 0,
+    "y": -0.01,
+    "z": -0.23
+  },
+  "temperature": 21.5
+}

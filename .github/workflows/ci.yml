@@ -1,0 +1,64 @@
+# Continuous integration for compulsory assignment 1.
+#
+# GitHub runs this on a fresh machine every time you push. The assignment is
+# approved when ALL THREE jobs are green in your own repository:
+#
+#   tests (linux-gcc)        the three test programs, GCC
+#   tests (windows-msvc)     the same, MSVC — a different standard library,
+#                            different struct layouts, different line endings
+#   address sanitizer        the same tests, watching every memory access.
+#                            Part 3's decoder is fed truncated and lying input;
+#                            if it reads one byte outside its buffer, this job
+#                            is red even though the plain jobs are green
+#
+# The first configure downloads and builds three libraries — a few minutes.
+
+name: assignment tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:        # lets you re-run it by hand from the Actions tab
+
+jobs:
+  tests:
+    name: tests (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false      # always run both, so you see if only one is broken
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux-gcc
+          - os: windows-latest
+            label: windows-msvc
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build --config Debug --parallel
+
+      - name: Run the tests
+        run: ctest --test-dir build --build-config Debug --output-on-failure --no-tests=error
+
+  address-sanitizer:
+    name: address sanitizer (linux-gcc)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure with ASan + UBSan
+        run: cmake -S . -B build-asan -DLAB_SANITIZER=address,undefined
+
+      - name: Build
+        run: cmake --build build-asan --parallel
+
+      - name: Run the tests under ASan + UBSan
+        run: ctest --test-dir build-asan --output-on-failure --no-tests=error

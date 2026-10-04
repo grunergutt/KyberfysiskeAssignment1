@@ -1,0 +1,10 @@
+# CMake build trees — never commit these
+build/
+build-*/
+cmake-build-*/
+
+# IDE
+.idea/
+.vs/
+.vscode/
+*.user

@@ -1,0 +1,2 @@
+# The golden files are bytes, not text: git must never touch their line endings.
+*.bin binary

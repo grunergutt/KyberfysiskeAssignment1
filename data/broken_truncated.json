@@ -1,0 +1,4 @@
+{
+  "sensor_id": "imu-north-01",
+  "sequence": 10,
+  "imu": { "is_valid": tr
