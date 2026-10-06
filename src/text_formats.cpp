@@ -94,15 +94,89 @@ SensorData parseYaml(const std::string& text)
 std::string toJson(const SensorData& data)
 {
     // TODO(Part 2)
-    (void)data;
-    return {};
+    json j;
+    j["sensor_id"] = data.sensor_id;
+    j["sequence"] = data.sequence;
+    j["timestamp_ms"] = data.timestamp_ms;
+    j["imu"]["is_valid"] = data.imu.is_valid;
+    j["imu"]["roll"] = data.imu.roll;
+    j["imu"]["pitch"] = data.imu.pitch;
+    j["imu"]["yaw"] = data.imu.yaw;
+    j["accelerometer"]["is_valid"] = data.accelerometer.is_valid;
+    j["accelerometer"]["x"] = data.accelerometer.x;
+    j["accelerometer"]["y"] = data.accelerometer.y;
+    j["accelerometer"]["z"] = data.accelerometer.z;
+    if (data.temperature)
+    {
+        j["temperature"] = *data.temperature;   // the double inside
+    }
+    return j.dump();
 }
 
 std::string toYaml(const SensorData& data)
 {
     // TODO(Part 2)
-    (void)data;
-    return {};
+    YAML::Node root;
+    root["sensor_id"] = data.sensor_id;
+    root["sequence"] = data.sequence;
+    root["timestamp_ms"] = data.timestamp_ms;
+    root["imu"]["is_valid"] = data.imu.is_valid;
+    root["imu"]["roll"] = data.imu.roll;
+    root["imu"]["pitch"] = data.imu.pitch;
+    root["imu"]["yaw"] = data.imu.yaw;
+    root["accelerometer"]["is_valid"] = data.accelerometer.is_valid;
+    root["accelerometer"]["x"] = data.accelerometer.x;
+    root["accelerometer"]["y"] = data.accelerometer.y;
+    root["accelerometer"]["z"] = data.accelerometer.z;
+    if (data.temperature)
+    {
+        root["temperature"] = *data.temperature;
+    }
+    YAML::Emitter out;
+    out << root;          // hand the whole node to the emitter
+    return out.c_str();
+
+    //ELLER
+    // Alternative: the same output, written with YAML::Emitter.
+// The Emitter streams the structure in order: BeginMap / Key / Value / EndMap.
+// Compared with building a YAML::Node it gives more control over formatting
+// (flow vs block style, quoting, comments, number precision) and skips the
+// intermediate tree. For this assignment the Node version is simpler.
+//
+// std::string toYaml(const SensorData& data)
+// {
+//     YAML::Emitter out;
+//     out.SetDoublePrecision(17);   // 17 significant digits: any double survives the round trip
+//
+//     out << YAML::BeginMap;                                                   // outer map
+//     out << YAML::Key << "sensor_id"    << YAML::Value << data.sensor_id;
+//     out << YAML::Key << "sequence"     << YAML::Value << data.sequence;
+//     out << YAML::Key << "timestamp_ms" << YAML::Value << data.timestamp_ms;
+//
+//     out << YAML::Key << "imu" << YAML::Value;                                // value of "imu" is...
+//     out << YAML::BeginMap;                                                   // ...a nested map
+//     out << YAML::Key << "is_valid" << YAML::Value << data.imu.is_valid;
+//     out << YAML::Key << "roll"     << YAML::Value << data.imu.roll;
+//     out << YAML::Key << "pitch"    << YAML::Value << data.imu.pitch;
+//     out << YAML::Key << "yaw"      << YAML::Value << data.imu.yaw;
+//     out << YAML::EndMap;                                                     // end of imu
+//
+//     out << YAML::Key << "accelerometer" << YAML::Value;
+//     out << YAML::BeginMap;
+//     out << YAML::Key << "is_valid" << YAML::Value << data.accelerometer.is_valid;
+//     out << YAML::Key << "x"        << YAML::Value << data.accelerometer.x;
+//     out << YAML::Key << "y"        << YAML::Value << data.accelerometer.y;
+//     out << YAML::Key << "z"        << YAML::Value << data.accelerometer.z;
+//     out << YAML::EndMap;                                                     // end of accelerometer
+//
+//     if (data.temperature)                                                    // left out when empty
+//     {
+//         out << YAML::Key << "temperature" << YAML::Value << *data.temperature;
+//     }
+//
+//     out << YAML::EndMap;                                                     // end of outer map
+//     return out.c_str();
+// }
 }
 
 } // namespace ais2203
