@@ -94,7 +94,7 @@ void putF64le(std::vector<std::uint8_t>& out, double d)
     }
 };
 
-} 
+}
 
 std::vector<std::uint8_t> encodeBinary(const SensorData& data)
 {
